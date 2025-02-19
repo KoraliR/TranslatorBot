@@ -27,4 +27,5 @@ def make_request(texts, token):
                              )
     translated_text = response.json()
     translated_text = translated_text.get("translations")[0]["text"]
+    print("API!!!!")
     return translated_text

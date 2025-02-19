@@ -11,7 +11,7 @@ def add_user(tg_id, user_name, PATH):
     result = cur.execute(command).fetchall()
     if result == []:
         last_id = int(cur.execute("SELECT ID FROM Users").fetchall()[-1][0])
-        command = f"INSERT INTO Users(tg_id, username, first_start, ID) VALUES({tg_id}, '{user_name}', '{dt.datetime.now().strftime('%Y.%m.%d %H:%M:%S')}', {last_id + 1})"
+        command = f"INSERT INTO Users(tg_id, username, first_start, ID, api_counter) VALUES({tg_id}, '{user_name}', '{dt.datetime.now().strftime('%Y.%m.%d %H:%M:%S')}', {last_id + 1}, 0)"
         cur.execute(command)
         con.commit()
         con.close()
@@ -34,3 +34,14 @@ def add_counter_repeat(ID, counter, PATH, flag):
     cur.execute(command)
     con.commit()
     con.close()
+
+def search_words(word, PATH):
+    word = word.lower()
+    con = sqlite3.connect(os.path.join(PATH, DB_FILE_NAME))
+    cur = con.cursor()
+    command = f'SELECT * FROM dict WHERE eng = "{word}"'
+    word_info = cur.execute(command).fetchall()
+    if word_info == []:
+        return ("ERR", "ERR")
+    else:
+        return ("OK", word_info)
